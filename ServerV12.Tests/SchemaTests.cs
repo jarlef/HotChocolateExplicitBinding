@@ -16,8 +16,8 @@ public class SchemaTests
             var result = await Assert.ThrowsAsync<SchemaException>(async () =>
             {
                 await serviceBuilder.AddGraphQLServer()
-                    .ModifyOptions(x => x.DefaultBindingBehavior = BindingBehavior.Explicit)
-                    .AddQueryType<Query>(d => d.BindFieldsImplicitly())
+                    .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                    .AddQueryType<Query>(c => c.BindFieldsImplicitly())
                     .BuildSchemaAsync();
             });
 
@@ -34,8 +34,8 @@ public class SchemaTests
             var result = await Assert.ThrowsAsync<SchemaException>(async () =>
             {
                 await serviceBuilder.AddGraphQLServer()
-                    .ModifyOptions(x => x.DefaultBindingBehavior = BindingBehavior.Explicit)
-                    .AddQueryType<Query>(d => d.BindFieldsImplicitly())
+                    .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                    .AddQueryType<Query>(c => c.BindFieldsImplicitly())
                     .AddType<BookType>()
                     .BuildSchemaAsync();
             });
@@ -54,8 +54,8 @@ public class SchemaTests
             var result = await Assert.ThrowsAsync<SchemaException>(async () =>
             {
                 await serviceBuilder.AddGraphQLServer()
-                    .ModifyOptions(x => x.DefaultBindingBehavior = BindingBehavior.Explicit)
-                    .AddQueryType<Query>(d => d.BindFieldsImplicitly())
+                    .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                    .AddQueryType<Query>(c => c.BindFieldsImplicitly())
                     .AddType<BookTypeWithExplicitBinding>()
                     .BuildSchemaAsync();
             });
@@ -72,8 +72,8 @@ public class SchemaTests
             var serviceBuilder = new ServiceCollection();
 
             var schema = await serviceBuilder.AddGraphQLServer()
-                .ModifyOptions(x => x.DefaultBindingBehavior = BindingBehavior.Explicit)
-                .AddQueryType<Query>(d => d.BindFieldsImplicitly())
+                .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                .AddQueryType<Query>(c => c.BindFieldsImplicitly())
                 .AddType<BookTypeWithOneField>()
                 .BuildSchemaAsync();
 
@@ -89,8 +89,8 @@ public class SchemaTests
             var serviceBuilder = new ServiceCollection();
 
             var schema = await serviceBuilder.AddGraphQLServer()
-                .ModifyOptions(x => x.DefaultBindingBehavior = BindingBehavior.Explicit)
-                .AddQueryType<Query>(d => d.BindFieldsImplicitly())
+                .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                .AddQueryType<Query>(c => c.BindFieldsImplicitly())
                 .AddType<BookTypeWithAllFields>()
                 .BuildSchemaAsync();
 

@@ -8,7 +8,6 @@ namespace ServerV13.Tests
 {
     public class SchemaTests
     {
-
         [Fact]
         public async Task DefaultRegistration_Book_ShouldHaveZeroFields()
         {
@@ -17,8 +16,8 @@ namespace ServerV13.Tests
             var result = await Assert.ThrowsAsync<SchemaException>(async () =>
             {
                 await serviceBuilder.AddGraphQLServer()
-                    .ModifyOptions(x => x.DefaultBindingBehavior = BindingBehavior.Explicit)
-                    .AddTypes()
+                    .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                    .AddQueryType<Query>(c => c.BindFieldsImplicitly())
                     .BuildSchemaAsync();
             });
 
@@ -35,8 +34,8 @@ namespace ServerV13.Tests
             var result = await Assert.ThrowsAsync<SchemaException>(async () =>
             {
                 await serviceBuilder.AddGraphQLServer()
-                    .ModifyOptions(x => x.DefaultBindingBehavior = BindingBehavior.Explicit)
-                    .AddTypes()
+                    .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                    .AddQueryType<Query>(c => c.BindFieldsImplicitly())
                     .AddType<BookType>()
                     .BuildSchemaAsync();
             });
@@ -55,8 +54,8 @@ namespace ServerV13.Tests
             var result = await Assert.ThrowsAsync<SchemaException>(async () =>
             {
                 await serviceBuilder.AddGraphQLServer()
-                    .ModifyOptions(x => x.DefaultBindingBehavior = BindingBehavior.Explicit)
-                    .AddTypes()
+                    .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                    .AddQueryType<Query>(c => c.BindFieldsImplicitly())
                     .AddType<BookTypeWithExplicitBinding>()
                     .BuildSchemaAsync();
             });
@@ -73,8 +72,8 @@ namespace ServerV13.Tests
             var serviceBuilder = new ServiceCollection();
 
             var schema = await serviceBuilder.AddGraphQLServer()
-                .ModifyOptions(x => x.DefaultBindingBehavior = BindingBehavior.Explicit)
-                .AddTypes()
+                .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                .AddQueryType<Query>(c => c.BindFieldsImplicitly())
                 .AddType<BookTypeWithOneField>()
                 .BuildSchemaAsync();
 
@@ -90,8 +89,8 @@ namespace ServerV13.Tests
             var serviceBuilder = new ServiceCollection();
 
             var schema = await serviceBuilder.AddGraphQLServer()
-                .ModifyOptions(x => x.DefaultBindingBehavior = BindingBehavior.Explicit)
-                .AddTypes()
+                .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                .AddQueryType<Query>(c => c.BindFieldsImplicitly())
                 .AddType<BookTypeWithAllFields>()
                 .BuildSchemaAsync();
 
