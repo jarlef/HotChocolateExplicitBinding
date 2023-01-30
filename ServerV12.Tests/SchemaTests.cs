@@ -9,127 +9,127 @@ namespace ServerV12.Tests;
 public class SchemaTests
 {
     [Fact]
-        public async Task DefaultRegistration_Book_ShouldHaveZeroFields()
+    public async Task DefaultRegistration_Book_ShouldHaveZeroFields()
+    {
+        var serviceBuilder = new ServiceCollection();
+
+        var result = await Assert.ThrowsAsync<SchemaException>(async () =>
         {
-            var serviceBuilder = new ServiceCollection();
-
-            var result = await Assert.ThrowsAsync<SchemaException>(async () =>
-            {
-                await serviceBuilder.AddGraphQLServer()
-                    .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
-                    .AddQueryType<Query>(c => c.BindFieldsImplicitly())
-                    .BuildSchemaAsync();
-            });
-
-            result.Errors.Should().NotBeEmpty();
-            var error = result.Errors.First();
-            error.Message.Should().Be("The object type `Book` has to at least define one field in order to be valid.");
-        }
-    
-        [Fact]
-        public async Task AddBookType_Book_ShouldHaveZeroFields()
-        {
-            var serviceBuilder = new ServiceCollection();
-
-            var result = await Assert.ThrowsAsync<SchemaException>(async () =>
-            {
-                await serviceBuilder.AddGraphQLServer()
-                    .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
-                    .AddQueryType<Query>(c => c.BindFieldsImplicitly())
-                    .AddType<BookType>()
-                    .BuildSchemaAsync();
-            });
-
-            result.Errors.Should().NotBeEmpty();
-            var error = result.Errors.First();
-            error.Message.Should().Be("The object type `Book` has to at least define one field in order to be valid.");
-        }
-    
-        [Fact]
-    
-        public async Task AddBookTypeWithExplicitBinding_Book_ShouldHaveZeroFields()
-        {
-            var serviceBuilder = new ServiceCollection();
-
-            var result = await Assert.ThrowsAsync<SchemaException>(async () =>
-            {
-                await serviceBuilder.AddGraphQLServer()
-                    .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
-                    .AddQueryType<Query>(c => c.BindFieldsImplicitly())
-                    .AddType<BookTypeWithExplicitBinding>()
-                    .BuildSchemaAsync();
-            });
-
-            result.Errors.Should().NotBeEmpty();
-            var error = result.Errors.First();
-            error.Message.Should().Be("The object type `Book` has to at least define one field in order to be valid.");
-
-        }
-        
-        [Fact]
-        public async Task AddBookTypeWithOneField_Book_ShouldHaveOneField()
-        {
-            var serviceBuilder = new ServiceCollection();
-
-            var schema = await serviceBuilder.AddGraphQLServer()
+            await serviceBuilder.AddGraphQLServer()
                 .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
                 .AddQueryType<Query>(c => c.BindFieldsImplicitly())
-                .AddType<BookTypeWithOneField>()
                 .BuildSchemaAsync();
+        });
 
-            var bookType = schema.GetType<ObjectType>("Book");
-            bookType.Fields.Count.Should().Be(2); // title + __typename
-            bookType.Fields.ContainsField("title").Should().BeTrue();
-            bookType.Fields.ContainsField("authorName").Should().BeFalse();
-        }
-        
-        [Fact]
-        public async Task AddBookTypeWithAllFields_Book_ShouldHaveAllField()
+        result.Errors.Should().NotBeEmpty();
+        var error = result.Errors.First();
+        error.Message.Should().Be("The object type `Book` has to at least define one field in order to be valid.");
+    }
+
+    [Fact]
+    public async Task AddBookType_Book_ShouldHaveZeroFields()
+    {
+        var serviceBuilder = new ServiceCollection();
+
+        var result = await Assert.ThrowsAsync<SchemaException>(async () =>
         {
-            var serviceBuilder = new ServiceCollection();
-
-            var schema = await serviceBuilder.AddGraphQLServer()
+            await serviceBuilder.AddGraphQLServer()
                 .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
                 .AddQueryType<Query>(c => c.BindFieldsImplicitly())
-                .AddType<BookTypeWithAllFields>()
+                .AddType<BookType>()
                 .BuildSchemaAsync();
+        });
 
-            var bookType = schema.GetType<ObjectType>("Book");
-            bookType.Fields.Count.Should().Be(3); // title + authorName + __typename
-            bookType.Fields.ContainsField("title").Should().BeTrue();
-            bookType.Fields.ContainsField("authorName").Should().BeTrue();
-        }
-    
-        public class BookType : ObjectType<Book>
+        result.Errors.Should().NotBeEmpty();
+        var error = result.Errors.First();
+        error.Message.Should().Be("The object type `Book` has to at least define one field in order to be valid.");
+    }
+
+    [Fact]
+
+    public async Task AddBookTypeWithExplicitBinding_Book_ShouldHaveZeroFields()
+    {
+        var serviceBuilder = new ServiceCollection();
+
+        var result = await Assert.ThrowsAsync<SchemaException>(async () =>
         {
-            protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
-            {
-            }
-        }
-    
-        public class BookTypeWithExplicitBinding : ObjectType<Book>
+            await serviceBuilder.AddGraphQLServer()
+                .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+                .AddQueryType<Query>(c => c.BindFieldsImplicitly())
+                .AddType<BookTypeWithExplicitBinding>()
+                .BuildSchemaAsync();
+        });
+
+        result.Errors.Should().NotBeEmpty();
+        var error = result.Errors.First();
+        error.Message.Should().Be("The object type `Book` has to at least define one field in order to be valid.");
+
+    }
+
+    [Fact]
+    public async Task AddBookTypeWithOneField_Book_ShouldHaveOneField()
+    {
+        var serviceBuilder = new ServiceCollection();
+
+        var schema = await serviceBuilder.AddGraphQLServer()
+            .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+            .AddQueryType<Query>(c => c.BindFieldsImplicitly())
+            .AddType<BookTypeWithOneField>()
+            .BuildSchemaAsync();
+
+        var bookType = schema.GetType<ObjectType>("Book");
+        bookType.Fields.Count.Should().Be(2); // title + __typename
+        bookType.Fields.ContainsField("title").Should().BeTrue();
+        bookType.Fields.ContainsField("authorName").Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task AddBookTypeWithAllFields_Book_ShouldHaveAllField()
+    {
+        var serviceBuilder = new ServiceCollection();
+
+        var schema = await serviceBuilder.AddGraphQLServer()
+            .ModifyOptions(c => c.DefaultBindingBehavior = BindingBehavior.Explicit)
+            .AddQueryType<Query>(c => c.BindFieldsImplicitly())
+            .AddType<BookTypeWithAllFields>()
+            .BuildSchemaAsync();
+
+        var bookType = schema.GetType<ObjectType>("Book");
+        bookType.Fields.Count.Should().Be(3); // title + authorName + __typename
+        bookType.Fields.ContainsField("title").Should().BeTrue();
+        bookType.Fields.ContainsField("authorName").Should().BeTrue();
+    }
+
+    public class BookType : ObjectType<Book>
+    {
+        protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
         {
-            protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
-            {
-                descriptor.BindFieldsExplicitly();
-            }
         }
-        
-        public class BookTypeWithOneField : ObjectType<Book>
+    }
+
+    public class BookTypeWithExplicitBinding : ObjectType<Book>
+    {
+        protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
         {
-            protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
-            {
-                descriptor.Field(x => x.Title);
-                // ignoring AuthorName
-            }
+            descriptor.BindFieldsExplicitly();
         }
-        
-        public class BookTypeWithAllFields : ObjectType<Book>
+    }
+
+    public class BookTypeWithOneField : ObjectType<Book>
+    {
+        protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
         {
-            protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
-            {
-                descriptor.Field(x => x.Title);
-                descriptor.Field(x => x.AuthorName);
-            }
+            descriptor.Field(x => x.Title);
+            // ignoring AuthorName
         }
+    }
+
+    public class BookTypeWithAllFields : ObjectType<Book>
+    {
+        protected override void Configure(IObjectTypeDescriptor<Book> descriptor)
+        {
+            descriptor.Field(x => x.Title);
+            descriptor.Field(x => x.AuthorName);
+        }
+    }
 }
